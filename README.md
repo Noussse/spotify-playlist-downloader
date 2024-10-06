@@ -49,7 +49,7 @@ Script for searching and downloading songs from YouTube
 - liked_songs.txt
 :File where liked songs from Spotify are stored(the file will be created after runing GettingPlaylist.py for the first time)
 
-### run GettingPlaylist.py to get the songs names in liked_songs.txt then stop the flask server and run searching_in_youtube.py
+### run GettingPlaylist.py to get the songs names in liked_songs.txt then stop the flask server and run searching_in_youtube.py after all the songs are downloaded you will find them in your "downloads" folder in a folder called "songfixer"
 
 
 
