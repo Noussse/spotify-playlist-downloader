@@ -24,7 +24,7 @@ A Python-based tool that allows users to download their liked songs from Spotify
 Install the required Python dependencies:
 
 ```bash
-pip install flask requests python-dotenv
+pip install flask requests python-dotenv yt-dlp
 ```
 ## Setting up Environment Variables
 
