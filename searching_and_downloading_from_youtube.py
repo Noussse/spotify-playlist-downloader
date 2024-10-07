@@ -37,7 +37,7 @@ def search_youtube(song_name):
         return None
 
 
-def get_all_songs_url():
+def reading_and_downloading_all_the_songs():
     with open("liked_songs.txt", "r") as f:
         songs = f.readlines()
     for song in songs:
@@ -65,4 +65,4 @@ def download_youtube_audio(video_url):
     except subprocess.CalledProcessError as e:
         print(f"Error occurred: {e}")
 
-get_all_songs_url()
+reading_and_downloading_all_the_songs()
