@@ -36,9 +36,8 @@ def search_youtube(song_name):
         print(f"No results found for: {song_name}")
         return None
 
-
 def reading_and_downloading_all_the_songs():
-    with open("liked_songs.txt", "r") as f:
+    with open("liked_songs.txt", "r", encoding="utf-8") as f:  # Specify encoding here
         songs = f.readlines()
     for song in songs:
         song = song.strip()
