@@ -32,6 +32,7 @@ def authorize():
 
 @app.route('/callback')
 def callback():
+    #getting the code to exchange for the token
     code = request.args.get('code')
     token_url = 'https://accounts.spotify.com/api/token'
     data = {
@@ -41,11 +42,14 @@ def callback():
         'client_id': client_id,
         'client_secret': client_secret
     }
+    #getting the token
     response =post(token_url, data=data)
     tokens = response.json()
     access_token=tokens.get('access_token')
     headers = {'Authorization': f'Bearer {access_token}'}
     liked_songs_url='https://api.spotify.com/v1/me/tracks'
+
+    #a function that downloads songs in a playlist you just need to provide the url to the playlist(api version)
     def register_songs(url):
         songs_response = get(url, headers=headers)
         if songs_response.status_code == 200:
@@ -57,11 +61,17 @@ def callback():
             return "Songs saved to (liked_songs.txt) and will start downloading soon You can close this window."
         else :
             return f"Failed to fetch liked songs.{songs_response.status_code}{songs_response.text}"
+        
+
     if user_choice=="liked_songs" :
         result_message=register_songs(liked_songs_url)
         return result_message
     elif user_choice=="saved_playlists":
-        return "under devolpment"
+        albums_response=get('https://api.spotify.com/v1/me/playlists',headers=headers)
+        albums_response_json=albums_response.json()
+        albums_number=albums_response_json['total']
+        albums=albums_response_json['items']
+        return albums
 
 
 
