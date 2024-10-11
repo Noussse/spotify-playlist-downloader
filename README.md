@@ -1,6 +1,7 @@
 # Spotify Liked Songs Downloader
 
-A Python-based tool that allows users to download their liked songs from Spotify and fetch the corresponding audio from YouTube. This project integrates with the Spotify API to retrieve your liked songs and uses YouTube for downloading audio files.
+A Python-based tool that allows users to download all the songs in a spotify playlist of your choice  in bulk  and fetch the corresponding audio from YouTube. This project integrates with the Spotify API to retrieve your liked songs and uses YouTube for downloading audio files.
+"the playlist needs to be in your library"
 
 ## Features
 
@@ -49,7 +50,7 @@ Script for searching and downloading songs from YouTube
 - liked_songs.txt
 :File where liked songs from Spotify are stored(the file will be created after runing GettingPlaylist.py for the first time)
 
-### run getting_playlist.py to get the songs names in liked_songs.txt then stop the flask server and run searching_and_downloading_from_youtube.py after all the songs are downloaded you will find them in your "downloads" folder in a folder called "songfixer"
+### run getting_playlist.py and then choose if you want to download your liked songs or a specific playlist to get the songs names in liked_songs.txt then stop the flask server and run searching_and_downloading_from_youtube.py after all the songs are downloaded you will find them in your "downloads" folder in a folder called "songfixer"
 
 
 
