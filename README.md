@@ -1,6 +1,6 @@
-# Spotify Liked Songs Downloader
+# Spotify playlist Downloader
 
-A Python-based tool that allows users to download all the songs in a spotify playlist of your choice  in bulk  and fetch the corresponding audio from YouTube. This project integrates with the Spotify API to retrieve your liked songs and uses YouTube for downloading audio files.
+A Python-based tool that allows users to download all the songs in a spotify playlist of their choice in bulk and fetch the corresponding audio from YouTube. This project integrates with the Spotify API to retrieve your liked songs and uses YouTube for downloading audio files.
 "the playlist needs to be in your library"
 
 ## Features
