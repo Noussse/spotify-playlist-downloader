@@ -51,7 +51,7 @@ Script for searching and downloading songs from YouTube
 :File where liked songs from Spotify are stored(the file will be created after runing GettingPlaylist.py for the first time)
 
 ### run getting_playlist.py and then choose if you want to download your liked songs or a specific playlist to get the songs names in liked_songs.txt then stop the flask server and run searching_and_downloading_from_youtube.py after all the songs are downloaded you will find them in your "downloads" folder in a folder called "songfixer".
-##just keep in mind that 100 songs give or take is the limit per day
+## just keep in mind that 100 songs give or take is the limit per day
 
 
 
