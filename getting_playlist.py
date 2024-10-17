@@ -91,4 +91,4 @@ def download_playlist():
 
 if __name__ == '__main__':
     webbrowser.open('http://localhost:5000/')
-    app.run(port=5000, debug=True)
+    app.run(port=5000)
