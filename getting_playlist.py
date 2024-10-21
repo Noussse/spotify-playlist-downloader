@@ -90,5 +90,5 @@ def download_playlist():
     return register_songs(url)
 
 if __name__ == '__main__':
-    webbrowser.open('http://localhost:5000/')
+    webbrowser.open(r'http://localhost:5000/')
     app.run(port=5000)
