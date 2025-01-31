@@ -63,7 +63,7 @@ def register_songs(url):
         with open('liked_songs.txt', 'w', encoding='utf-8') as f:
             for track in tracks:
                 f.write(f"{track['track']['name']} by {track['track']['artists'][0]['name']}\n")
-
+        
         return "Songs saved to (liked_songs.txt) for the download to start lunch 'searching_and_downloading_from_youtube.py'. You can close this window."
     else:
         return f"Failed to fetch songs. {songs_response.status_code} {songs_response.text}"
