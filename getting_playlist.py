@@ -1,11 +1,14 @@
+from flask import Flask, request, jsonify, redirect
 from requests import get, post
 from dotenv import load_dotenv
 import os
-import webbrowser
-from flask import Flask, request, redirect
+from flask_cors import CORS  # Import CORS
 
 load_dotenv()
 app = Flask(__name__)
+
+# Enable CORS for React (running on port 3000)
+CORS(app)
 
 client_id = os.getenv("client_id")
 client_secret = os.getenv("client_secret")
@@ -18,12 +21,11 @@ access_token = None
 
 @app.route('/')
 def home():
-    return """
-        <h1>Spotify Downloader</h1>
-        <h2>Please select an option:</h2>
-        <a href="/authorize?type=liked_songs">Download Liked Songs</a><br>
-        <a href="/authorize?type=saved_playlists">Download Saved Playlists</a>
-    """
+    return jsonify({
+        "message": "Spotify Downloader. Please select an option.",
+        "liked_songs_url": "/authorize?type=liked_songs",
+        "saved_playlists_url": "/authorize?type=saved_playlists"
+    })
 
 @app.route('/authorize')
 def authorize():
@@ -50,45 +52,21 @@ def callback():
     headers = {'Authorization': f'Bearer {access_token}'}
 
     if user_choice == "liked_songs":
-        return register_songs('https://api.spotify.com/v1/me/tracks')
+        songs_response = get('https://api.spotify.com/v1/me/tracks', headers=headers)
+        if songs_response.status_code == 200:
+            songs = songs_response.json()
+            tracks = songs['items']
+            liked_songs = [{"id": track['track']['id'], "name": track['track']['name']} for track in tracks]
+            return jsonify(liked_songs)  # Return directly as JSON
+        else:
+            return jsonify({"error": f"Failed to fetch songs. {songs_response.status_code} {songs_response.text}"}), 400
+
     elif user_choice == "saved_playlists":
-        return display_playlists(headers)
-
-def register_songs(url):
-    songs_response = get(url, headers={'Authorization': f'Bearer {access_token}'})
-    if songs_response.status_code == 200:
-        songs = songs_response.json()
-        tracks = songs['items']
-
-        with open('liked_songs.txt', 'w', encoding='utf-8') as f:
-            for track in tracks:
-                f.write(f"{track['track']['name']} by {track['track']['artists'][0]['name']}\n")
-        
-        return "Songs saved to (liked_songs.txt) for the download to start lunch 'searching_and_downloading_from_youtube.py'. You can close this window."
-    else:
-        return f"Failed to fetch songs. {songs_response.status_code} {songs_response.text}"
-
-def display_playlists(headers):
-    albums_response = get('https://api.spotify.com/v1/me/playlists', headers=headers)
-    albums_response_json = albums_response.json()
-    albums = albums_response_json['items']
-
-    # Create links for each playlist
-    playlist_html = "<h2>Your Playlists:</h2><ul>"
-    for album in albums:
-        playlist_id = album['id']
-        playlist_name = album['name']
-        playlist_html += f'<li><a href="/download_playlist?playlist_id={playlist_id}">{playlist_name}</a></li>'
-    playlist_html += "</ul>"
-
-    return playlist_html
-
-@app.route('/download_playlist')
-def download_playlist():
-    playlist_id = request.args.get('playlist_id')
-    url = f'https://api.spotify.com/v1/playlists/{playlist_id}/tracks'
-    return register_songs(url)
+        albums_response = get('https://api.spotify.com/v1/me/playlists', headers=headers)
+        albums_response_json = albums_response.json()
+        albums = albums_response_json['items']
+        playlists = [{"id": album['id'], "name": album['name']} for album in albums]
+        return jsonify(playlists)  # Return directly as JSON
 
 if __name__ == '__main__':
-    webbrowser.open(r'http://localhost:5000/')
-    app.run(port=5000)
+    app.run(port=5000, debug=True)  # Ensure Flask runs on port 5000
