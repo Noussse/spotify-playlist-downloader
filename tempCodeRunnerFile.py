@@ -1,1 +1,1 @@
-http://localhost:5000/
+jsonify({"access_token": access_token})
