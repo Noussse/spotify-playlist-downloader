@@ -36,14 +36,45 @@ def search_youtube(song_name):
         print(f"No results found for: {song_name}")
         return None
 
+import json
+
 def reading_and_downloading_all_the_songs():
-    with open("liked_songs.txt", "r", encoding="utf-8") as f:  # Specify encoding here
-        songs = f.readlines()
-    for song in songs:
-        song = song.strip()
-        video_url = search_youtube(song)
-        if video_url:  # Ensure video_url is not None before attempting to download
-            download_youtube_audio(video_url)
+    try:
+        print("Starting download process...")
+        # Open and load the JSON data from the file
+        with open("liked_songs.txt", "r", encoding="utf-8") as f:
+            songs = json.load(f)
+
+        total_songs = len(songs)
+        print(f"Found {total_songs} songs to download")
+
+        # Iterate over each song in the list
+        for index, song in enumerate(songs, 1):
+            song_name = song['name']
+            artist_name = song['artist']
+            song_query = f'"{song_name}" by {artist_name}'
+
+            print(f"\nProcessing song {index}/{total_songs}: {song_query}")
+            
+            # Search for the song on YouTube
+            video_url = search_youtube(song_query)
+            
+            if video_url:
+                print(f"Found video URL: {video_url}")
+                download_youtube_audio(video_url)
+            else:
+                print(f"Skipping download for: {song_query} (no video found)")
+
+    except FileNotFoundError:
+        print("Error: liked_songs.txt file not found")
+        raise
+    except json.JSONDecodeError:
+        print("Error: liked_songs.txt is not valid JSON")
+        raise
+    except Exception as e:
+        print(f"An unexpected error occurred: {str(e)}")
+        raise
+
 
 def download_youtube_audio(video_url):
     downloads_folder = os.path.join(os.path.expanduser('~'), 'Downloads', 'musicfixer')
@@ -64,4 +95,4 @@ def download_youtube_audio(video_url):
     except subprocess.CalledProcessError as e:
         print(f"Error occurred: {e}")
 
-reading_and_downloading_all_the_songs()
+
