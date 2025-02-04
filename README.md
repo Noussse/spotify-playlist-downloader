@@ -1,4 +1,4 @@
-# 🎵 Spotify Music Downloader 🎧
+# 🎵 Spotify Playlist Downloader 🎧
 
 ## 📌 Project Overview
 
