@@ -40,8 +40,8 @@ A full-stack web application that allows users to download their Spotify liked s
 
 ## 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/spotify-music-downloader.git
-cd spotify-music-downloader
+git clone https://github.com/Noussse/spotify-playlist-downloader
+cd spotify-playlist-downloader
 ```
 ## 2.Set up Backend
 ### Create virtual environment
