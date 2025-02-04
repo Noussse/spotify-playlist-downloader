@@ -1,4 +1,3 @@
-# Flask backend (app.py)
 from flask import Flask, request, redirect, jsonify, session
 from requests import post, get
 from flask_cors import CORS 
@@ -6,8 +5,10 @@ import os
 import json
 from searching_and_downloading_from_youtube import reading_and_downloading_all_the_songs
 app = Flask(__name__)
+
 app.secret_key = os.urandom(24)
-# Update CORS to allow credentials and specific origin
+
+
 CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
 
 client_id = os.getenv("CLIENT_ID")
@@ -22,6 +23,7 @@ def authorize():
 
 @app.route('/callback')
 def callback():
+    #exchanging code with token
     code = request.args.get('code')
     token_url = 'https://accounts.spotify.com/api/token'
     data = {
@@ -38,7 +40,6 @@ def callback():
     
     if access_token:
         session['access_token'] = access_token
-        # Set session cookie to be accessible by JavaScript
         session.permanent = True
         return redirect(f'http://localhost:5173/?login=success')
     else:
@@ -53,12 +54,16 @@ def get_token():
 
 @app.route('/liked_songs')
 def get_liked_songs():
+    url = 'https://api.spotify.com/v1/me/tracks'
+    downloadsong(url)
+
+
+def downloadsong(url):
     access_token = session.get('access_token')
 
     if not access_token:
         return jsonify({"error": "Access token is missing or expired"}), 401
-
-    url = 'https://api.spotify.com/v1/me/tracks'
+    
     songs_response = get(url, headers={'Authorization': f'Bearer {access_token}'})
     
     if songs_response.status_code == 200:
@@ -70,16 +75,40 @@ def get_liked_songs():
         # Save to file
         with open('liked_songs.txt', 'w', encoding='utf-8') as f:
             json.dump(tracks, f, indent=4)
-            
-        # Import and run the download function
-        from searching_and_downloading_from_youtube import reading_and_downloading_all_the_songs
+
         try:
             reading_and_downloading_all_the_songs()
             return jsonify({"tracks": tracks, "message": "Download process started"})
         except Exception as e:
             return jsonify({"tracks": tracks, "error": str(e)}), 500
     else:
-        return jsonify({"error": "Failed to fetch liked songs"}), songs_response.status_code
+        return jsonify({"error": "Failed to fetch songs"}), songs_response.status_code
+
+@app.route('/get_playlist_names')
+def getplaylist():
+    access_token = session.get('access_token')
+    headers = {"Authorization": f"Bearer {access_token}"}
+
+    url = 'https://api.spotify.com/v1/me/playlists'
+    response =get(url, headers=headers)
+
+    if response.status_code == 200:
+        playlists = response.json()['items']
+        playlist_names = [
+            {'id': playlist['id'], 'name': playlist['name']}
+            for playlist in playlists
+        ]
+        return jsonify(playlist_names)
+    else:
+        return jsonify({"error": "Failed to fetch playlists"}), response.status_code
+    
+@app.route('/download_playlist')
+def downloadplaylist():
+    playlist_id = request.args.get('playlist_id')
+    url = f'https://api.spotify.com/v1/playlists/{playlist_id}/tracks'
+    return downloadsong(url)
+
+
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)

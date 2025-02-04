@@ -26,7 +26,7 @@ def search_youtube(song_name):
         return None
     
     # Print the data for debugging
-    print(data)
+    #print(data)
 
     # Check if items key exists
     if 'items' in data and data['items']:
@@ -53,8 +53,6 @@ def reading_and_downloading_all_the_songs():
             song_name = song['name']
             artist_name = song['artist']
             song_query = f'"{song_name}" by {artist_name}'
-
-            print(f"\nProcessing song {index}/{total_songs}: {song_query}")
             
             # Search for the song on YouTube
             video_url = search_youtube(song_query)
